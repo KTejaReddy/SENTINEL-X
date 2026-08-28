@@ -10,7 +10,7 @@ __pycache__/
 *.pyo
 *.pyd
 
-# Build
+# Build / NextJS
 dist/
 build/
 .next/
@@ -33,3 +33,21 @@ obj/
 *.tif
 *.r
 *.asm
+*.license
+*.pys
+
+# Unity Specific
+[Ll]ibrary/
+[Ll]ocalTempCache/
+[Oo]bj/
+[Ll]ogs/
+[Uu]serSettings/
+[Mm]emoryCaptures/
+[Bb]uilds/
+*.apk
+*.unitypackage
+*.a
+*.so
+*.dylib
+*.pdb
+*.mdb
