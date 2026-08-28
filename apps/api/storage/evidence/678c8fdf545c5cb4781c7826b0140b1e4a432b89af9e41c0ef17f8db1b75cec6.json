@@ -1,0 +1,9 @@
+{
+  "type": "http_probe",
+  "probe": "weak_credentials",
+  "method": "POST",
+  "url": "http://127.0.0.1:5000/login",
+  "response_status": 200,
+  "response_excerpt": "{\"ok\":true,\"user\":\"alice\"}\n",
+  "confirmed_by": "login succeeded with alice/alice"
+}

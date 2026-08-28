@@ -1,0 +1,9 @@
+{
+  "type": "http_probe",
+  "probe": "broken_functional_auth",
+  "method": "GET",
+  "url": "http://127.0.0.1:5000/admin",
+  "response_status": 200,
+  "response_excerpt": "{\"disabled\":[],\"note\":\"this endpoint must require an ADMIN role\",\"panel\":\"admin\",\"users\":[\"alice\",\"admin\"]}\n",
+  "confirmed_by": "alice reached /admin"
+}

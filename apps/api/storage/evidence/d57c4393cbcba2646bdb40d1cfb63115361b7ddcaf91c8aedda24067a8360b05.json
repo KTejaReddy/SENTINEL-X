@@ -1,0 +1,17 @@
+{
+  "tool_output": {
+    "scenario": "web_app_authorization",
+    "title": "Public Web Application \u2014 Broken Object-Level Authorization",
+    "mitre": [
+      "T1190",
+      "T1078",
+      "T1213"
+    ],
+    "label": "CONTROLLED LAB",
+    "demo": true,
+    "replay_id": "1d96bf6b7102ee95"
+  },
+  "retest_status": "FAILED",
+  "tool": "lab-range",
+  "label": "RETEST"
+}

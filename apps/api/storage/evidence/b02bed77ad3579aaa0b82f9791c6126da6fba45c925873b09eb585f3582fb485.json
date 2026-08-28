@@ -1,0 +1,9 @@
+{
+  "type": "http_probe",
+  "probe": "no_rate_limit",
+  "method": "GET",
+  "url": "http://127.0.0.1:9002/search",
+  "response_status": 200,
+  "response_excerpt": "12/12 requests returned 200",
+  "confirmed_by": null
+}

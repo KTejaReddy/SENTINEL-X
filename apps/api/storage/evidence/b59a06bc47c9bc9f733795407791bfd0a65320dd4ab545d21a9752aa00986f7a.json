@@ -1,0 +1,9 @@
+{
+  "type": "http_probe",
+  "probe": "leaked_token_bfa",
+  "method": "GET",
+  "url": "http://127.0.0.1:9002/admin/users",
+  "response_status": 200,
+  "response_excerpt": "{\"users\":[\"alice\",\"bob\",\"carol\",\"dave\",\"erin\",\"admin\"]}",
+  "confirmed_by": "admin API callable with leaked service token"
+}

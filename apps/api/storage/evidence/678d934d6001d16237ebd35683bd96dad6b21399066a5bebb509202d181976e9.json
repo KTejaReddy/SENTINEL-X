@@ -1,0 +1,11 @@
+{
+  "type": "lab_replay",
+  "method": "POST",
+  "url": "https://lab-api.lab.local/v1/auth/login",
+  "attempts": 200,
+  "blocked_after": null,
+  "label": "CONTROLLED LAB",
+  "demo": true,
+  "replay_id": "574750951ca3f326",
+  "scenario": "api_authorization"
+}

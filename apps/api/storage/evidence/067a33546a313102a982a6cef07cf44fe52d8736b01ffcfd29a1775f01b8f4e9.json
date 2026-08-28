@@ -1,0 +1,7 @@
+{
+  "type": "controlled_validation",
+  "tool": "lab-range",
+  "scenario": "web_app_authorization",
+  "label": "CONTROLLED LAB",
+  "target": "10.10.10.11"
+}

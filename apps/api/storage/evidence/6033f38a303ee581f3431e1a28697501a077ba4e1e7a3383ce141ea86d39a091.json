@@ -1,0 +1,9 @@
+{
+  "type": "http_probe",
+  "probe": "bola",
+  "method": "GET",
+  "url": "http://127.0.0.1:9002/orders/5",
+  "response_status": 200,
+  "response_excerpt": "{\"id\":5,\"customer\":\"erin\",\"product\":\"NAS\",\"amount\":599,\"accessed_as\":\"alice\"}",
+  "confirmed_by": "alice read erin's order via spoofed X-User header"
+}

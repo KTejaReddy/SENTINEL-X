@@ -1,0 +1,10 @@
+{
+  "type": "lab_replay",
+  "file": "lab-app/.env.example",
+  "secret_redacted": true,
+  "rule": "aws-access-token",
+  "label": "CONTROLLED LAB",
+  "demo": true,
+  "replay_id": "f037d3c434b1fa7b",
+  "scenario": "secret_exposure"
+}

@@ -1,0 +1,81 @@
+# =============================================================================
+# SENTINEL X — controlled cyber range (isolated lab)
+#
+#   docker compose -f cyber-range/docker-compose.lab.yml up -d --build
+#   scripts/reset-lab.sh   # one-command reset
+#
+# The range runs on its own INTERNAL network (10.10.10.0/24, no outbound
+# internet, no published ports). Targets are intentionally vulnerable — only
+# run this for authorized, isolated testing and demonstrations.
+# =============================================================================
+
+name: sentinelx-lab
+
+services:
+  gateway:
+    image: nginx:1.27-alpine
+    volumes:
+      - ./network/gateway.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      lab:
+        ipv4_address: 10.10.10.10
+    depends_on: [web-app, api]
+
+  web-app:
+    build: ./targets/web-app
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: app
+      DB_PASSWORD: app
+      DB_NAME: shop
+    networks:
+      lab:
+        ipv4_address: 10.10.10.11
+    depends_on: [db]
+
+  api:
+    build: ./targets/api
+    environment:
+      DB_HOST: db
+      DB_PORT: "5432"
+      DB_USER: app
+      DB_PASSWORD: app
+      DB_NAME: shop
+    networks:
+      lab:
+        ipv4_address: 10.10.10.12
+    depends_on: [db]
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: shop
+    volumes:
+      - ./targets/db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      lab:
+        ipv4_address: 10.10.10.13
+
+  attacker:
+    build: ./attacker
+    networks:
+      lab:
+        ipv4_address: 10.10.10.100
+
+  monitoring:
+    build: ./monitoring
+    networks:
+      lab:
+        ipv4_address: 10.10.10.101
+    depends_on: [web-app, api, db]
+
+networks:
+  lab:
+    driver: bridge
+    internal: true
+    ipam:
+      config:
+        - subnet: 10.10.10.0/24

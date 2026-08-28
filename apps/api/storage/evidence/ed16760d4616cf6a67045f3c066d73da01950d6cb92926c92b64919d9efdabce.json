@@ -1,0 +1,15 @@
+{
+  "tool_output": {
+    "scenario": "secret_exposure",
+    "title": "Secret Exposure in Repository",
+    "mitre": [
+      "T1552"
+    ],
+    "label": "CONTROLLED LAB",
+    "demo": true,
+    "replay_id": "65faff15479bbc92"
+  },
+  "retest_status": "FAILED",
+  "tool": "lab-range",
+  "label": "RETEST"
+}

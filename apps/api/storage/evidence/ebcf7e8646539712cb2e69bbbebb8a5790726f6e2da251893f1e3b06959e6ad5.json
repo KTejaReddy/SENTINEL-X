@@ -1,0 +1,9 @@
+{
+  "type": "lab_replay",
+  "note": "session token entropy sampled",
+  "entropy_bits": 48,
+  "label": "CONTROLLED LAB",
+  "demo": true,
+  "replay_id": "16911da013243462",
+  "scenario": "web_app_authorization"
+}

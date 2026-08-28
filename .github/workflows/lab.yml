@@ -1,0 +1,67 @@
+name: Cyber-range lifecycle
+
+# Runs the full authorized lab lifecycle: real scanner execution against the
+# lab targets, telemetry -> detection -> incident, real response action with
+# state-change verification, remediation retest, and the acceptance test.
+#
+# Requires Docker (the lab) and optionally real tools. Without the tools the
+# job still exercises the HTTP DAST adapter against the live lab targets.
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  lifecycle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install backend + lab targets
+        run: |
+          pip install -r apps/api/requirements.txt pytest
+          pip install flask requests   # lab web target deps
+
+      - name: Install real security tools (optional layer)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq nmap >/dev/null 2>&1 || true
+          (curl -fsSL https://raw.githubusercontent.com/projectdiscovery/nuclei/main/install.sh | bash) || true
+
+      - name: Start API (isolated test DB)
+        env:
+          ENVIRONMENT: test
+          DATABASE_URL: sqlite:///./lifecycle.db
+        run: |
+          cd apps/api
+          python -m alembic upgrade head
+          python -m sentinelx.seed
+          nohup python -m uvicorn sentinelx.main:app --host 127.0.0.1 --port 8000 > /tmp/api.log 2>&1 &
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8000/api/health >/dev/null && break; sleep 1; done
+
+      - name: Start lab targets (local processes, no Docker required)
+        run: |
+          cd cyber-range/targets/web-app && nohup python app.py > /tmp/lab-web.log 2>&1 &
+          cd cyber-range/targets/api && nohup python -m uvicorn main:app --host 127.0.0.1 --port 9002 > /tmp/lab-api.log 2>&1 &
+          sleep 3
+          curl -sf http://127.0.0.1:5000/healthz >/dev/null && echo "lab-web up"
+          curl -sf http://127.0.0.1:9002/healthz >/dev/null && echo "lab-api up"
+
+      - name: Run complete security lifecycle acceptance test
+        env:
+          API_URL: http://127.0.0.1:8000/api
+          LAB_WEB_URL: http://127.0.0.1:5000
+          LAB_API_URL: http://127.0.0.1:9002
+        run: python -m pytest tests/test_complete_lifecycle.py -q
+
+      - name: Upload API log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-log
+          path: /tmp/api.log

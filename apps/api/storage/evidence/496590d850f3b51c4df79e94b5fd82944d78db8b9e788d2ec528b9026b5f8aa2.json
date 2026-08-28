@@ -1,0 +1,9 @@
+{
+  "type": "http_probe",
+  "probe": "server_fingerprint",
+  "method": "GET",
+  "url": "http://127.0.0.1:5000/",
+  "response_status": 200,
+  "response_excerpt": "{\"routes\":[\"/login\",\"/orders/<id>\",\"/admin\"],\"service\":\"lab-shop-web\"}\n",
+  "confirmed_by": null
+}

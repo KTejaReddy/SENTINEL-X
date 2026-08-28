@@ -1,0 +1,11 @@
+{
+  "tool_output": {
+    "tool": "dast",
+    "demo": false,
+    "probes_executed": 8,
+    "target_unreachable": false
+  },
+  "retest_status": "FAILED",
+  "tool": "dast",
+  "label": "RETEST"
+}

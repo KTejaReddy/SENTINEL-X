@@ -1,0 +1,64 @@
+name: CI — backend tests + frontend build
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: apps/api/requirements.txt
+
+      - name: Install backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pytest
+
+      - name: Unit + integration tests (isolation, RBAC, scope, workflows, AI, lockout)
+        run: python -m pytest ../../tests -q
+
+      - name: Migration tests (fresh upgrade, seeding, model-vs-migration drift)
+        run: python -m pytest ../../tests/test_migrations.py -q
+
+      - name: Import smoke test
+        run: python -c "import sentinelx.main; print('app imports OK')"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - name: Install frontend
+        run: npm ci --no-audit --no-fund
+
+      - name: Production build
+        run: npm run build
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose stacks
+        run: |
+          docker compose config --quiet
+          docker compose -f cyber-range/docker-compose.lab.yml config --quiet

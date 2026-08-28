@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-ink-950 text-slate-200 antialiased;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #273042;
+  border-radius: 4px;
+}
+
+@layer components {
+  .card {
+    @apply rounded-lg border border-ink-700 bg-ink-850 p-4 shadow-panel;
+  }
+  .btn {
+    @apply inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply btn bg-accent text-ink-950 hover:bg-sky-300;
+  }
+  .btn-ghost {
+    @apply btn border border-ink-600 bg-ink-800 text-slate-200 hover:bg-ink-700;
+  }
+  .btn-danger {
+    @apply btn bg-critical text-white hover:bg-red-500;
+  }
+  .input {
+    @apply w-full rounded-md border border-ink-600 bg-ink-900 px-3 py-1.5 text-sm text-slate-200 outline-none focus:border-accent;
+  }
+  .label {
+    @apply mb-1 block text-xs font-medium uppercase tracking-wide text-slate-400;
+  }
+  .tab {
+    @apply rounded-md px-3 py-1.5 text-sm font-medium text-slate-400 hover:bg-ink-800 hover:text-slate-200;
+  }
+  .tab-active {
+    @apply bg-ink-800 text-accent;
+  }
+}

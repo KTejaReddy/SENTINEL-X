@@ -1,0 +1,12 @@
+{
+  "type": "lab_replay",
+  "method": "GET",
+  "url": "https://lab-web.lab.local/api/orders/1042",
+  "auth": "session cookie (lab user alice)",
+  "response_status": 200,
+  "response_note": "Returned resource owned by another lab user",
+  "label": "CONTROLLED LAB",
+  "demo": true,
+  "replay_id": "c6bf6058b047eb88",
+  "scenario": "web_app_authorization"
+}

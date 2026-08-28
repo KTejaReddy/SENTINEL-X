@@ -1,0 +1,9 @@
+{
+  "type": "http_probe",
+  "probe": "missing_security_headers",
+  "method": "GET",
+  "url": "http://127.0.0.1:5000/",
+  "response_status": 200,
+  "response_excerpt": "missing=['content-security-policy', 'strict-transport-security', 'x-frame-options', 'x-content-type-options']",
+  "confirmed_by": null
+}

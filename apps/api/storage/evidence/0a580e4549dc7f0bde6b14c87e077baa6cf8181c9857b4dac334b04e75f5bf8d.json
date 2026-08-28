@@ -1,0 +1,9 @@
+{
+  "type": "http_probe",
+  "probe": "idor",
+  "method": "GET",
+  "url": "http://127.0.0.1:5000/orders/2",
+  "response_status": 200,
+  "response_excerpt": "{\"amount\":349,\"card_tail\":\"1111\",\"customer\":\"bob\",\"id\":2,\"product\":\"Monitor\"}\n",
+  "confirmed_by": "alice read bob's order"
+}

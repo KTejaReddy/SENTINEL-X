@@ -1,0 +1,17 @@
+{
+  "tool_output": {
+    "scenario": "api_authorization",
+    "title": "API Authorization Weakness",
+    "mitre": [
+      "T1190",
+      "T1078",
+      "T1213"
+    ],
+    "label": "CONTROLLED LAB",
+    "demo": true,
+    "replay_id": "574750951ca3f326"
+  },
+  "retest_status": "FAILED",
+  "tool": "lab-range",
+  "label": "RETEST"
+}

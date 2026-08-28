@@ -1,0 +1,102 @@
+# =============================================================================
+# SENTINEL X — primary platform stack
+#
+#   docker compose up -d --build
+#   → web    http://localhost:8080
+#   → api    http://localhost:8000/api/health   (docs at /docs)
+#
+# The API image runs both the REST API and the in-process async job worker.
+# The cyber range is NOT part of this stack — see cyber-range/docker-compose.lab.yml.
+# =============================================================================
+
+name: sentinelx
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sentinelx
+      POSTGRES_PASSWORD: sentinelx
+      POSTGRES_DB: sentinelx
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sentinelx -d sentinelx"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "5432:5432"
+    networks: [backend]
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    ports:
+      - "6379:6379"
+    networks: [backend]
+
+  api:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/api.Dockerfile
+    environment:
+      ENVIRONMENT: development
+      DATABASE_URL: postgresql+psycopg://sentinelx:sentinelx@postgres:5432/sentinelx
+      REDIS_URL: redis://redis:6379/0
+      OBJECT_STORAGE_PATH: /data/evidence
+      JWT_SECRET: ${JWT_SECRET:-dev-only-insecure-secret-change-me}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:-dev-only-insecure-encryption-key-change-me-000000000000000}
+      AI_PROVIDER: ${AI_PROVIDER:-local}
+      CORS_ORIGINS: http://localhost:8080,http://127.0.0.1:8080
+    volumes:
+      - evidence:/data/evidence
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    networks: [backend]
+
+  # Optional OpenSearch (heavy) — enable with:  docker compose --profile search up -d
+  opensearch:
+    image: opensearchproject/opensearch:2.15.0
+    profiles: ["search"]
+    environment:
+      discovery.type: single-node
+      plugins.security.disabled: "true"
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: SentinelX!2026
+    ports:
+      - "9200:9200"
+    volumes:
+      - opensearchdata:/usr/share/opensearch/data
+    networks: [backend]
+
+  web:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/web.Dockerfile
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+    networks: [backend]
+
+volumes:
+  pgdata:
+  redisdata:
+  evidence:
+  opensearchdata:
+
+networks:
+  backend:
+    driver: bridge

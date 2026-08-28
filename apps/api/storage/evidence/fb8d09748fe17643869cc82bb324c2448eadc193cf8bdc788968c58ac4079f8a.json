@@ -1,0 +1,11 @@
+{
+  "type": "lab_replay",
+  "method": "GET",
+  "url": "https://lab-api.lab.local/v1/admin/users",
+  "response_status": 200,
+  "expected": 403,
+  "label": "CONTROLLED LAB",
+  "demo": true,
+  "replay_id": "41c37644151b0b81",
+  "scenario": "api_authorization"
+}
